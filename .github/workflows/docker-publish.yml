@@ -50,11 +50,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 构建并推送
+      # 构建并推送 - 使用多标签版本管理
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          # 注意：镜像名称必须全部小写
-          tags: ghcr.io/${{ github.repository_owner }}/ci-cd-practice:latest
+          # 使用多标签：latest 和 commit SHA
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ci-cd-practice:latest
+            ghcr.io/${{ github.repository_owner }}/ci-cd-practice:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/ci-cd-practice:${{ github.sha | slice(0, 7) }}
